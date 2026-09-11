@@ -6,39 +6,17 @@
 @section('content')
 
 @php
-$comp = $competition ?? (object)[
-    'id'          => 1,
-    'slug'        => 'basket-competition',
-    'name'        => 'Basket Competition',
-    'event_name'  => 'GEN FEST 2026',
-    'category'    => 'Olahraga',
-    'description' => 'Kompetisi basket antar pelajar dan mahasiswa se-Batam. Terbuka untuk semua tingkatan, dari SMP hingga perguruan tinggi. Gunakan kesempatan ini untuk menunjukkan kemampuan terbaikmu!',
-    'price'       => 50000,
-    'quota'       => 100,
-    'registrations_count' => 62,
-    'event_date'  => '2026-09-20',
-    'location'    => 'GOR Temenggung Abdul Jamal, Batam',
-    'status'      => 'open',
-    'poster'      => null,
-    'rules'       => "1. Peserta wajib hadir 30 menit sebelum pertandingan dimulai.\n2. Menggunakan seragam tim yang bersih dan sopan.\n3. Keputusan wasit bersifat final dan tidak dapat diganggu gugat.\n4. Dilarang menggunakan bahasa kasar dan tidak sportif.\n5. Setiap tim terdiri dari 5 pemain inti dan maksimal 3 pemain cadangan.",
-    'requirements'=> "- Pelajar/mahasiswa aktif (wajib bawa kartu pelajar/KTM)\n- Usia peserta 13–25 tahun\n- Sehat jasmani dan rohani\n- Membawa e-ticket pada hari pelaksanaan",
-    'schedule'    => [
-        ['time' => '07.00 – 08.00', 'event' => 'Registrasi ulang & Warm-up'],
-        ['time' => '08.00 – 08.30', 'event' => 'Pembukaan & Technical Meeting'],
-        ['time' => '08.30 – 12.00', 'event' => 'Pertandingan Penyisihan'],
-        ['time' => '12.00 – 13.00', 'event' => 'Istirahat'],
-        ['time' => '13.00 – 17.00', 'event' => 'Pertandingan Semi-Final & Final'],
-        ['time' => '17.00 – 17.30', 'event' => 'Penutupan & Pengumuman Pemenang'],
-    ],
-    'faq'         => [
-        ['q' => 'Bolehkah mendaftar secara individu?', 'a' => 'Untuk cabang basket, pendaftaran dilakukan per tim (minimal 5 orang).'],
-        ['q' => 'Apakah ada hadiah?', 'a' => 'Ya! Juara 1 mendapatkan trofi dan uang tunai Rp2.000.000, Juara 2 Rp1.000.000.'],
-        ['q' => 'Bagaimana jika sakit dan tidak bisa hadir?', 'a' => 'Hubungi panitia via WhatsApp minimal 24 jam sebelum acara.'],
-    ],
-];
+$comp = $competition;
+$registered_count = isset($comp->registrations_count) ? $comp->registrations_count : 0;
+$registered_pct   = $comp->quota > 0 ? min(100, round(($registered_count / $comp->quota) * 100)) : 0;
+$quota_left       = max(0, $comp->quota - $registered_count);
 
-$registered_pct = $comp->quota > 0 ? min(100, round(($comp->registrations_count / $comp->quota) * 100)) : 0;
-$quota_left = max(0, $comp->quota - $comp->registrations_count);
+// Parse schedule JSON jika tersimpan sebagai string
+$schedule = [];
+if (!empty($comp->schedule)) {
+    $decoded = json_decode($comp->schedule, true);
+    $schedule = is_array($decoded) ? $decoded : [];
+}
 @endphp
 
 {{-- Page Header --}}
@@ -139,14 +117,14 @@ $quota_left = max(0, $comp->quota - $comp->registrations_count);
             @endif
 
             {{-- Schedule --}}
-            @if(!empty($comp->schedule))
+            @if(!empty($schedule))
             <div class="card p-6">
                 <h2 class="text-xl font-bold text-[#0B1040] mb-5 flex items-center gap-2">
                     <span class="w-1 h-5 rounded-full bg-[#2563EB] inline-block"></span>
                     Jadwal Acara
                 </h2>
                 <div class="space-y-0 border border-[#E2E8F7] rounded-xl overflow-hidden">
-                    @foreach($comp->schedule as $i => $sched)
+                    @foreach($schedule as $i => $sched)
                     <div class="flex items-center gap-4 px-5 py-3.5 {{ $i % 2 === 0 ? 'bg-white' : 'bg-[#F8FAFF]' }} border-b border-[#E2E8F7] last:border-b-0">
                         <div class="w-32 flex-shrink-0">
                             <span class="text-sm font-bold text-[#2563EB] font-mono">{{ is_array($sched) ? $sched['time'] : $sched->time }}</span>
@@ -159,29 +137,7 @@ $quota_left = max(0, $comp->quota - $comp->registrations_count);
             @endif
 
             {{-- FAQ --}}
-            @if(!empty($comp->faq))
-            <div class="card p-6">
-                <h2 class="text-xl font-bold text-[#0B1040] mb-5 flex items-center gap-2">
-                    <span class="w-1 h-5 rounded-full bg-[#2563EB] inline-block"></span>
-                    FAQ
-                </h2>
-                <div x-data="faq()" class="space-y-3">
-                    @foreach($comp->faq as $i => $item)
-                    <div class="border border-[#E2E8F7] rounded-xl overflow-hidden">
-                        <button @click="toggle({{ $i }})" class="w-full flex items-center justify-between gap-4 px-5 py-4 text-left bg-white hover:bg-[#F8FAFF] transition-colors">
-                            <span class="font-semibold text-[#0B1040] text-sm">{{ is_array($item) ? $item['q'] : $item->q }}</span>
-                            <svg class="w-4 h-4 text-[#2563EB] flex-shrink-0 transition-transform" :class="active === {{ $i }} ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-                        <div x-show="active === {{ $i }}" x-cloak class="px-5 pb-4 pt-0 bg-[#F8FAFF] border-t border-[#E2E8F7]">
-                            <p class="text-[#64748B] text-sm pt-3 leading-relaxed">{{ is_array($item) ? $item['a'] : $item->a }}</p>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
+            {{-- Kolom faq dapat ditambahkan ke tabel competitions di migrasi berikutnya --}}
 
         </div>
 
@@ -206,8 +162,22 @@ $quota_left = max(0, $comp->quota - $comp->registrations_count);
                     <p class="text-xs text-[#94A3B8] font-medium mb-1">BIAYA PENDAFTARAN</p>
                     <p class="text-3xl font-extrabold text-[#0B1040]">
                         Rp{{ number_format($comp->price, 0, ',', '.') }}
-                        <span class="text-sm font-medium text-[#94A3B8]">/ peserta</span>
+                        <span class="text-sm font-medium text-[#94A3B8]">/ {{ $comp->unit ?? 'peserta' }}</span>
                     </p>
+                    @if($comp->price_early_bird || $comp->price_community)
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        @if($comp->price_early_bird)
+                        <span class="text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded-full px-2.5 py-1 font-semibold">
+                            Early Bird: Rp{{ number_format($comp->price_early_bird, 0, ',', '.') }}
+                        </span>
+                        @endif
+                        @if($comp->price_community)
+                        <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 rounded-full px-2.5 py-1 font-semibold">
+                            Komunitas: Rp{{ number_format($comp->price_community, 0, ',', '.') }}
+                        </span>
+                        @endif
+                    </div>
+                    @endif
                 </div>
 
                 {{-- Info list --}}
