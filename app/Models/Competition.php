@@ -18,8 +18,7 @@ class Competition extends Model
         'poster',
         'category',
         'price',
-        'price_community',
-        'price_early_bird',
+        'min_purchase',
         'quota',
         'event_date',
         'location',
@@ -31,11 +30,10 @@ class Competition extends Model
     ];
 
     protected $casts = [
-        'event_date'      => 'date',
-        'price'           => 'integer',
-        'price_community' => 'integer',
-        'price_early_bird'=> 'integer',
-        'quota'           => 'integer',
+        'event_date'   => 'date',
+        'price'        => 'integer',
+        'min_purchase' => 'integer',
+        'quota'        => 'integer',
     ];
 
     /** Auto-generate slug from name if not provided */
@@ -56,9 +54,4 @@ class Competition extends Model
         return 'Rp' . number_format($this->price, 0, ',', '.');
     }
 
-    /** Apakah lomba memiliki harga khusus */
-    public function hasSpecialPrice(): bool
-    {
-        return $this->price_community !== null || $this->price_early_bird !== null;
-    }
 }

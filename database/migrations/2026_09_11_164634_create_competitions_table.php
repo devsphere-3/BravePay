@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('poster')->nullable();
             $table->string('category');
             $table->unsignedBigInteger('price');             // harga normal (satuan rupiah)
-            $table->unsignedBigInteger('price_community')->nullable();  // harga komunitas
-            $table->unsignedBigInteger('price_early_bird')->nullable(); // harga early bird
+            $table->unsignedInteger('min_purchase')->default(1);
             $table->unsignedInteger('quota')->default(0);    // 0 = tidak terbatas
             $table->date('event_date')->nullable();
             $table->string('location')->nullable();

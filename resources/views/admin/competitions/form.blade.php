@@ -88,26 +88,15 @@
                 </div>
                 <div>
                     <label class="form-label">Biaya Pendaftaran (Rp) <span class="text-red-500">*</span></label>
-                <div>
-                    <label class="form-label">Harga Normal (Rp) <span class="text-red-500">*</span></label>
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#64748B]">Rp</span>
                         <input type="number" name="price" value="{{ old('price', $competition->price ?? '') }}" required min="0" class="form-input pl-9 @error('price') border-red-400 @enderror" placeholder="50000">
                     </div>
                 </div>
                 <div>
-                    <label class="form-label">Harga Early Bird (Rp) <span class="font-normal text-[#94A3B8]">opsional</span></label>
-                    <div class="relative">
-                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#64748B]">Rp</span>
-                        <input type="number" name="price_early_bird" value="{{ old('price_early_bird', $competition->price_early_bird ?? '') }}" min="0" class="form-input pl-9" placeholder="45000">
-                    </div>
-                </div>
-                <div>
-                    <label class="form-label">Harga Komunitas (Rp) <span class="font-normal text-[#94A3B8]">opsional</span></label>
-                    <div class="relative">
-                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#64748B]">Rp</span>
-                        <input type="number" name="price_community" value="{{ old('price_community', $competition->price_community ?? '') }}" min="0" class="form-input pl-9" placeholder="40000">
-                    </div>
+                    <label class="form-label">Min. Pembelian <span class="text-red-500">*</span></label>
+                    <input type="number" name="min_purchase" value="{{ old('min_purchase', $competition->min_purchase ?? 1) }}" required min="1" class="form-input @error('min_purchase') border-red-400 @enderror" placeholder="1">
+                    <p class="mt-1 text-xs text-slate-400">Untuk event team misalnya 3 berarti minimal 3 peserta dalam satu pendaftaran.</p>
                 </div>
                 <div>
                     <label class="form-label">Kuota (0 = tidak terbatas)</label>
@@ -127,6 +116,12 @@
             <div>
                 <label class="form-label">Persyaratan</label>
                 <textarea name="requirements" rows="4" class="form-input resize-none font-mono text-sm" placeholder="- Persyaratan 1&#10;- Persyaratan 2">{{ old('requirements', $competition->requirements ?? '') }}</textarea>
+            </div>
+
+            <div>
+                <label class="form-label">Jadwal Acara (JSON)</label>
+                <textarea name="schedule" rows="6" class="form-input resize-none font-mono text-sm" placeholder='[{"time":"09:00","event":"Registrasi"},{"time":"10:00","event":"Babak penyisihan"}]'>{{ old('schedule', $competition->schedule ?? '') }}</textarea>
+                <p class="mt-1 text-xs text-slate-400">Format JSON dipakai di halaman event publik. Contoh: [{"time":"09:00","event":"Registrasi"}]</p>
             </div>
 
             <div>

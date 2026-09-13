@@ -26,10 +26,11 @@ Alpine.data('faq', () => ({
 }));
 
 // Registration form
-Alpine.data('registrationForm', (pricePerParticipant = 0) => ({
-    participantCount: 1,
+Alpine.data('registrationForm', (pricePerParticipant = 0, minPurchase = 1) => ({
+    participantCount: Math.max(1, minPurchase),
     participants: [{ name: '', date_of_birth: '' }],
     pricePerParticipant,
+    minPurchase,
     get total() {
         return this.participantCount * this.pricePerParticipant;
     },
@@ -41,12 +42,16 @@ Alpine.data('registrationForm', (pricePerParticipant = 0) => ({
         }).format(this.total);
     },
     updateCount(value) {
-        const count = Math.max(1, Math.min(20, parseInt(value) || 1));
+        const min = Math.max(1, this.minPurchase || 1);
+        const count = Math.max(min, Math.min(20, parseInt(value) || min));
         this.participantCount = count;
         while (this.participants.length < count) {
             this.participants.push({ name: '', date_of_birth: '' });
         }
         this.participants = this.participants.slice(0, count);
+    },
+    init() {
+        this.updateCount(this.participantCount);
     },
 }));
 

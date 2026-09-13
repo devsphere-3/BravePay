@@ -10,6 +10,9 @@ $comp = $competition;
 $registered_count = isset($comp->registrations_count) ? $comp->registrations_count : 0;
 $registered_pct   = $comp->quota > 0 ? min(100, round(($registered_count / $comp->quota) * 100)) : 0;
 $quota_left       = max(0, $comp->quota - $registered_count);
+$competition_unit = $comp->unit ?? 'peserta';
+$competition_unit_label = $competition_unit === 'team' ? 'team' : 'peserta';
+$minPurchase      = max(1, (int) ($comp->min_purchase ?? 1));
 
 // Parse schedule JSON jika tersimpan sebagai string
 $schedule = [];
@@ -162,20 +165,13 @@ if (!empty($comp->schedule)) {
                     <p class="text-xs text-[#94A3B8] font-medium mb-1">BIAYA PENDAFTARAN</p>
                     <p class="text-3xl font-extrabold text-[#0B1040]">
                         Rp{{ number_format($comp->price, 0, ',', '.') }}
-                        <span class="text-sm font-medium text-[#94A3B8]">/ {{ $comp->unit ?? 'peserta' }}</span>
+                        <span class="text-sm font-medium text-[#94A3B8]">/ {{ $competition_unit_label }}</span>
                     </p>
-                    @if($comp->price_early_bird || $comp->price_community)
+                    @if($minPurchase > 1)
                     <div class="flex flex-wrap gap-2 mt-2">
-                        @if($comp->price_early_bird)
-                        <span class="text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded-full px-2.5 py-1 font-semibold">
-                            Early Bird: Rp{{ number_format($comp->price_early_bird, 0, ',', '.') }}
+                        <span class="text-xs bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE] rounded-full px-2.5 py-1 font-semibold">
+                            min. {{ $minPurchase }}
                         </span>
-                        @endif
-                        @if($comp->price_community)
-                        <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 rounded-full px-2.5 py-1 font-semibold">
-                            Komunitas: Rp{{ number_format($comp->price_community, 0, ',', '.') }}
-                        </span>
-                        @endif
                     </div>
                     @endif
                 </div>

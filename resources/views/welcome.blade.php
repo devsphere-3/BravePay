@@ -236,6 +236,7 @@
                         :quota="$c->quota ?? 0"
                         :registered="$c->registrations_count ?? 0"
                         :status="$c->status"
+                        :unit="$c->unit ?? 'peserta'"
                         :poster="$c->poster ? asset('storage/'.$c->poster) : null"
                     />
                 </div>

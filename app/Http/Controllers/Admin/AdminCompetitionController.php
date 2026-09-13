@@ -24,22 +24,28 @@ class AdminCompetitionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'            => ['required', 'string', 'max:255'],
-            'event_name'      => ['nullable', 'string', 'max:255'],
-            'description'     => ['nullable', 'string'],
-            'category'        => ['required', 'string', 'max:100'],
-            'price'           => ['required', 'numeric', 'min:0'],
-            'price_community' => ['nullable', 'numeric', 'min:0'],
-            'price_early_bird'=> ['nullable', 'numeric', 'min:0'],
-            'quota'           => ['nullable', 'integer', 'min:0'],
-            'event_date'      => ['required', 'date'],
-            'location'        => ['required', 'string', 'max:255'],
-            'status'          => ['required', 'in:open,closed,coming_soon,full'],
-            'unit'            => ['required', 'in:peserta,team'],
-            'rules'           => ['nullable', 'string'],
-            'requirements'    => ['nullable', 'string'],
-            'poster'          => ['nullable', 'image', 'max:2048'],
+            'name'         => ['required', 'string', 'max:255'],
+            'event_name'   => ['nullable', 'string', 'max:255'],
+            'description'  => ['nullable', 'string'],
+            'category'     => ['required', 'string', 'max:100'],
+            'price'        => ['required', 'numeric', 'min:0'],
+            'min_purchase' => ['required', 'integer', 'min:1'],
+            'quota'        => ['nullable', 'integer', 'min:0'],
+            'event_date'   => ['required', 'date'],
+            'location'     => ['required', 'string', 'max:255'],
+            'status'       => ['required', 'in:open,closed,coming_soon,full'],
+            'unit'         => ['required', 'in:peserta,team'],
+            'rules'        => ['nullable', 'string'],
+            'requirements' => ['nullable', 'string'],
+            'schedule'     => ['nullable', 'string'],
+            'poster'       => ['nullable', 'image', 'max:2048'],
         ]);
+
+        if (!empty($validated['schedule']) && !is_array(json_decode($validated['schedule'], true))) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'schedule' => ['Format jadwal tidak valid. Gunakan JSON seperti [{"time":"09:00","event":"Registrasi"}].'],
+            ]);
+        }
 
         $validated['slug'] = Str::slug($validated['name']) . '-' . time();
 
@@ -64,22 +70,28 @@ class AdminCompetitionController extends Controller
         $competition = Competition::findOrFail($id);
 
         $validated = $request->validate([
-            'name'            => ['required', 'string', 'max:255'],
-            'event_name'      => ['nullable', 'string', 'max:255'],
-            'description'     => ['nullable', 'string'],
-            'category'        => ['required', 'string', 'max:100'],
-            'price'           => ['required', 'numeric', 'min:0'],
-            'price_community' => ['nullable', 'numeric', 'min:0'],
-            'price_early_bird'=> ['nullable', 'numeric', 'min:0'],
-            'quota'           => ['nullable', 'integer', 'min:0'],
-            'event_date'      => ['required', 'date'],
-            'location'        => ['required', 'string', 'max:255'],
-            'status'          => ['required', 'in:open,closed,coming_soon,full'],
-            'unit'            => ['required', 'in:peserta,team'],
-            'rules'           => ['nullable', 'string'],
-            'requirements'    => ['nullable', 'string'],
-            'poster'          => ['nullable', 'image', 'max:2048'],
+            'name'         => ['required', 'string', 'max:255'],
+            'event_name'   => ['nullable', 'string', 'max:255'],
+            'description'  => ['nullable', 'string'],
+            'category'     => ['required', 'string', 'max:100'],
+            'price'        => ['required', 'numeric', 'min:0'],
+            'min_purchase' => ['required', 'integer', 'min:1'],
+            'quota'        => ['nullable', 'integer', 'min:0'],
+            'event_date'   => ['required', 'date'],
+            'location'     => ['required', 'string', 'max:255'],
+            'status'       => ['required', 'in:open,closed,coming_soon,full'],
+            'unit'         => ['required', 'in:peserta,team'],
+            'rules'        => ['nullable', 'string'],
+            'requirements' => ['nullable', 'string'],
+            'schedule'     => ['nullable', 'string'],
+            'poster'       => ['nullable', 'image', 'max:2048'],
         ]);
+
+        if (!empty($validated['schedule']) && !is_array(json_decode($validated['schedule'], true))) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'schedule' => ['Format jadwal tidak valid. Gunakan JSON seperti [{"time":"09:00","event":"Registrasi"}].'],
+            ]);
+        }
 
         if ($request->hasFile('poster')) {
             $validated['poster'] = $request->file('poster')->store('posters', 'public');

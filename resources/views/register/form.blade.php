@@ -10,7 +10,10 @@ $comp = $competition ?? (object)[
     'name' => 'Basket Competition', 'event_name' => 'GEN FEST 2026',
     'price'=> 50000, 'location' => 'Batam',
     'event_date' => '2026-09-20', 'category' => 'Olahraga',
+    'unit' => 'peserta', 'min_purchase' => 1,
 ];
+$unitLabel = ($comp->unit ?? 'peserta') === 'team' ? 'team' : 'peserta';
+$minPurchase = max(1, (int) ($comp->min_purchase ?? 1));
 @endphp
 
 <div class="relative bg-gradient-to-b from-[#EFF6FF] to-white py-10">
@@ -40,7 +43,7 @@ $comp = $competition ?? (object)[
                     </p>
                 </div>
                 <div class="text-right flex-shrink-0">
-                    <p class="text-xs text-[#94A3B8]">per peserta</p>
+                    <p class="text-xs text-[#94A3B8]">per {{ $unitLabel }}</p>
                     <p class="font-extrabold text-[#0B1040]">Rp{{ number_format($comp->price, 0, ',', '.') }}</p>
                 </div>
             </div>
@@ -49,7 +52,7 @@ $comp = $competition ?? (object)[
             <form
                 action="{{ route('register.store', $comp->slug) }}"
                 method="POST"
-                x-data="registrationForm({{ $comp->price }})"
+                x-data="registrationForm({{ $comp->price }}, {{ $minPurchase }})"
                 class="space-y-6"
             >
                 @csrf
@@ -134,8 +137,8 @@ $comp = $competition ?? (object)[
                             >+</button>
                         </div>
                         <div>
-                            <p class="text-sm font-semibold text-[#0B1040]" x-text="participantCount + ' Peserta'"></p>
-                            <p class="text-xs text-[#94A3B8]">Maks. 20 peserta per transaksi</p>
+                            <p class="text-sm font-semibold text-[#0B1040]" x-text="participantCount + ' ' + (participantCount > 1 ? '{{ ucfirst($unitLabel) }}' : '{{ ucfirst($unitLabel) }}')"></p>
+                            <p class="text-xs text-[#94A3B8]">Minimal {{ $minPurchase }} {{ $unitLabel }} per transaksi. Maks. 20 per transaksi.</p>
                         </div>
                     </div>
                 </div>

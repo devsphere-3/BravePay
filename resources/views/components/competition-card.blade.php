@@ -9,6 +9,7 @@
     'quota'       => 100,
     'registered'  => 45,
     'status'      => 'open',   // open | closed | full | coming_soon
+    'unit'        => 'peserta',
     'poster'      => null,
     'event_name'  => 'GEN FEST 2026',
 ])
@@ -28,6 +29,7 @@ $statusClass = match($status) {
     'coming_soon' => 'badge-pending',
     default       => 'badge-active',
 };
+$unitLabel = ($unit ?? 'peserta') === 'team' ? 'team' : 'peserta';
 $quota_pct = $quota > 0 ? min(100, round(($registered / $quota) * 100)) : 0;
 $quota_color = $quota_pct >= 90 ? 'bg-red-500' : ($quota_pct >= 70 ? 'bg-amber-500' : 'bg-[#2563EB]');
 @endphp
@@ -114,7 +116,7 @@ $quota_color = $quota_pct >= 90 ? 'bg-red-500' : ($quota_pct >= 70 ? 'bg-amber-5
                 <p class="text-xs text-[#64748B]">Biaya</p>
                 <p class="text-base font-bold text-[#0B1040]">
                     Rp{{ number_format($price, 0, ',', '.') }}
-                    <span class="text-xs font-normal text-[#64748B]">/peserta</span>
+                    <span class="text-xs font-normal text-[#64748B]">/{{ $unitLabel }}</span>
                 </p>
             </div>
             @if($status === 'open')
