@@ -6,21 +6,20 @@
 
 @php
 $reg = $registration ?? null;
-$comp = $reg->competition ?? (object)[
-    'name' => 'Basket Competition', 'event_name' => 'GEN FEST 2026',
-    'price' => 50000, 'location' => 'Batam',
-    'event_date' => '2026-09-20', 'category' => 'Olahraga',
-    'slug' => 'basket-competition',
-];
-$participants = $reg ? $reg->participants : collect([
-    (object)['name' => 'Wahyu Perwira', 'date_of_birth' => '2005-03-15'],
-    (object)['name' => 'Budi Santoso',  'date_of_birth' => '2004-07-22'],
-]);
-$total_participants = $reg ? $reg->total_participants : 2;
-$total_amount = $reg ? $reg->total_amount : 100000;
-$order_code = $reg ? $reg->order_code : 'BRV-20260911-0001';
-$email = $reg ? $reg->email : 'wahyu@email.com';
-$phone = $reg ? $reg->phone : '+6281234567890';
+$comp = $reg && isset($reg->competition)
+    ? (object) ($reg->competition ?? [])
+    : (object)[
+        'name' => 'Data belum tersedia', 'event_name' => null,
+        'price' => 0, 'location' => 'Belum tersedia',
+        'event_date' => null, 'category' => 'Belum tersedia',
+        'slug' => '#',
+    ];
+$participants = $reg && isset($reg->participants) ? collect($reg->participants)->map(fn ($p) => (object) $p) : collect();
+$total_participants = $reg ? ($reg->participant_count ?? $participants->count()) : 0;
+$total_amount = $reg ? ($reg->total_amount ?? 0) : 0;
+$order_code = $reg ? ($reg->order_code ?? 'BRV-') : 'BRV-';
+$email = $reg ? ($reg->email ?? '-') : '-';
+$phone = $reg ? ($reg->phone ?? '-') : '-';
 @endphp
 
 <div class="relative bg-gradient-to-b from-[#EFF6FF] to-white py-10">
@@ -97,7 +96,7 @@ $phone = $reg ? $reg->phone : '+6281234567890';
                             Peserta ({{ $total_participants }} orang)
                         </p>
                         <div class="space-y-2">
-                            @foreach($participants as $i => $p)
+                            @forelse($participants as $i => $p)
                             <div class="flex items-center gap-3 bg-[#F8FAFF] rounded-xl p-3">
                                 <div class="w-8 h-8 rounded-full bg-[#DBEAFE] flex items-center justify-center flex-shrink-0">
                                     <span class="text-xs font-bold text-[#1D4ED8]">{{ $i + 1 }}</span>
@@ -109,7 +108,9 @@ $phone = $reg ? $reg->phone : '+6281234567890';
                                     </p>
                                 </div>
                             </div>
-                            @endforeach
+                            @empty
+                            <div class="bg-[#F8FAFF] rounded-xl p-3 text-sm text-[#64748B]">Belum ada data peserta.</div>
+                            @endforelse
                         </div>
                     </div>
 

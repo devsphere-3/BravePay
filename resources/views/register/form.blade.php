@@ -14,6 +14,7 @@ $comp = $competition ?? (object)[
 ];
 $unitLabel = ($comp->unit ?? 'peserta') === 'team' ? 'team' : 'peserta';
 $minPurchase = max(1, (int) ($comp->min_purchase ?? 1));
+$flashError = session('error');
 @endphp
 
 <div class="relative bg-gradient-to-b from-[#EFF6FF] to-white py-10">
@@ -52,7 +53,8 @@ $minPurchase = max(1, (int) ($comp->min_purchase ?? 1));
             <form
                 action="{{ route('register.store', $comp->slug) }}"
                 method="POST"
-                x-data="registrationForm({{ $comp->price }}, {{ $minPurchase }})"
+                x-data="registrationForm({{ $comp->price }}, {{ $minPurchase }}, '{{ $unitLabel }}', @js($flashError ?? ''), @js($comp->name ?? ''))"
+                x-on:submit="if (participantCount < minPurchase) { showMinError(); $event.preventDefault(); }"
                 class="space-y-6"
             >
                 @csrf
@@ -120,25 +122,26 @@ $minPurchase = max(1, (int) ($comp->min_purchase ?? 1));
                                 type="button"
                                 @click="updateCount(participantCount - 1)"
                                 class="w-11 h-11 flex items-center justify-center text-[#2563EB] hover:bg-[#EFF6FF] transition-colors font-bold text-lg"
-                                :disabled="participantCount <= 1"
+                                :disabled="participantCount <= minPurchase"
                             >−</button>
                             <input
                                 type="number" name="participant_count"
+                                value="{{ $minPurchase }}"
                                 x-model="participantCount"
+                                @input="if ($event.target.value === '') { return; } if (Number($event.target.value) < minPurchase) { $event.target.value = minPurchase; showMinError(); } updateCount($event.target.value);"
                                 @change="updateCount($event.target.value)"
-                                min="1" max="20"
+                                :min="minPurchase"
                                 class="w-14 h-11 text-center font-bold text-[#0B1040] border-x-2 border-[#E2E8F7] outline-none text-base"
                             >
                             <button
                                 type="button"
                                 @click="updateCount(participantCount + 1)"
                                 class="w-11 h-11 flex items-center justify-center text-[#2563EB] hover:bg-[#EFF6FF] transition-colors font-bold text-lg"
-                                :disabled="participantCount >= 20"
                             >+</button>
                         </div>
                         <div>
-                            <p class="text-sm font-semibold text-[#0B1040]" x-text="participantCount + ' ' + (participantCount > 1 ? '{{ ucfirst($unitLabel) }}' : '{{ ucfirst($unitLabel) }}')"></p>
-                            <p class="text-xs text-[#94A3B8]">Minimal {{ $minPurchase }} {{ $unitLabel }} per transaksi. Maks. 20 per transaksi.</p>
+                            <p class="text-sm font-semibold text-[#0B1040]" x-text="participantCount + ' ' + '{{ ucfirst($unitLabel) }}'"></p>
+                            <p class="text-xs text-[#94A3B8]">min. {{ $minPurchase }} • Minimal {{ $minPurchase }} {{ $unitLabel }} per transaksi.</p>
                         </div>
                     </div>
                 </div>
@@ -191,7 +194,7 @@ $minPurchase = max(1, (int) ($comp->min_purchase ?? 1));
                             <span class="font-semibold text-[#0B1040]">Rp{{ number_format($comp->price, 0, ',', '.') }}</span>
                         </div>
                         <div class="flex justify-between text-sm">
-                            <span class="text-[#64748B]" x-text="'× ' + participantCount + ' peserta'"></span>
+                            <span class="text-[#64748B]" x-text="'× ' + participantCount + ' {{ $unitLabel }}'"></span>
                             <span class="font-semibold text-[#0B1040]" x-text="formattedTotal"></span>
                         </div>
                     </div>
@@ -209,6 +212,71 @@ $minPurchase = max(1, (int) ($comp->min_purchase ?? 1));
                     </svg>
                 </button>
             </form>
+
+            <div
+                x-show="minErrorOpen"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4"
+                @keydown.escape.window="closeMinError()"
+            >
+                <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl border border-slate-200">
+                    <div class="flex items-center gap-3 mb-4">
+                        {{-- Icon: biru untuk info, amber untuk warning --}}
+                        <div
+                            class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                            :class="minErrorIsInfo ? 'bg-blue-100 text-blue-600' : 'bg-amber-100 text-amber-600'"
+                        >
+                            {{-- Info icon --}}
+                            <svg x-show="minErrorIsInfo" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            {{-- Warning icon --}}
+                            <svg x-show="!minErrorIsInfo" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 3h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p
+                                class="text-sm font-semibold uppercase tracking-wide"
+                                :class="minErrorIsInfo ? 'text-blue-600' : 'text-amber-600'"
+                                x-text="minErrorIsInfo ? 'Perhatian' : 'Peringatan'"
+                            ></p>
+                            <h3 class="text-lg font-extrabold text-[#0B1040]"
+                                x-text="minErrorIsInfo ? 'Minimum Pembelian Berlaku' : 'Jumlah minimum belum tercukupi'"
+                            ></h3>
+                        </div>
+                    </div>
+
+                    {{-- Info box showing admin-configured minimum --}}
+                    <div
+                        class="rounded-xl p-3 mb-4 flex items-center gap-3"
+                        :class="minErrorIsInfo ? 'bg-blue-50 border border-blue-200' : 'bg-amber-50 border border-amber-200'"
+                    >
+                        <span class="text-2xl font-extrabold" :class="minErrorIsInfo ? 'text-blue-600' : 'text-amber-600'"
+                              x-text="minPurchase"></span>
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Minimum per transaksi</p>
+                            <p class="text-sm font-semibold text-slate-700" x-text="unitLabel === 'team' ? unitLabel + ' (termasuk seluruh anggota)' : unitLabel"></p>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-slate-600 leading-relaxed" x-text="minErrorMessage"></p>
+
+                    <div class="mt-6 flex justify-end">
+                        <button type="button" @click="closeMinError()"
+                            class="btn-primary btn-sm"
+                            :class="minErrorIsInfo ? '' : 'bg-amber-500 hover:bg-amber-600 focus:ring-amber-300'"
+                        >
+                            <span x-text="minErrorIsInfo ? 'Mengerti, Lanjutkan' : 'Oke, Saya Perbaiki'"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

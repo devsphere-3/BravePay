@@ -17,16 +17,18 @@
 
 @php
 $t = $ticket ?? null;
-$ticket_code  = $t ? $t->ticket_code : 'BRV-TKT-A8F92K';
-$participant  = $t && $t->participant ? $t->participant->name : 'Wahyu Perwira';
-$comp_name    = $t && $t->registration && $t->registration->competition ? $t->registration->competition->name : 'Basket Competition';
-$event_name   = $t && $t->registration && $t->registration->competition ? ($t->registration->competition->event_name ?? 'GEN FEST 2026') : 'GEN FEST 2026';
-$category     = $t && $t->registration && $t->registration->competition ? ($t->registration->competition->category ?? 'Olahraga') : 'Olahraga';
-$event_date   = $t && $t->registration && $t->registration->competition ? $t->registration->competition->event_date : '2026-09-20';
-$location     = $t && $t->registration && $t->registration->competition ? ($t->registration->competition->location ?? 'Batam') : 'Batam';
-$order_code   = $t && $t->registration ? $t->registration->order_code : 'BRV-20260911-0001';
-$status       = $t ? $t->status : 'active'; // active|used|cancelled
-$qr_url       = $t ? ($t->qr_code ?? null) : null;
+$ticket_code  = $t ? ($t->ticket_code ?? 'BRV-TKT-') : 'BRV-TKT-';
+$participant  = $t ? ($t->participant ?? 'Peserta') : 'Peserta';
+$reg = $registration ?? null;
+$competition = $reg && isset($reg->competition) ? (object) ($reg->competition ?? []) : (object) ['name' => 'Event'];
+$comp_name    = $competition->name ?? 'Event';
+$event_name   = $competition->event_name ?? 'Event';
+$category     = $competition->category ?? '-';
+$event_date   = $competition->event_date ?? null;
+$location     = $competition->location ?? '-';
+$order_code   = $reg ? ($reg->order_code ?? 'BRV-') : 'BRV-';
+$status       = $t ? ($t->status ?? 'active') : 'active';
+$qr_url       = null;
 @endphp
 
 <div class="bg-[#F0F4FF] min-h-screen py-8">

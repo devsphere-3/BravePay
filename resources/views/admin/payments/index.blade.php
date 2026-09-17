@@ -36,7 +36,8 @@
             <thead>
                 <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wide">
                     <th class="px-5 py-3.5 text-left">Order ID</th>
-                    <th class="px-5 py-3.5 text-left hidden md:table-cell">Payment ID</th>
+                    <th class="px-5 py-3.5 text-left hidden md:table-cell">Email</th>
+                    <th class="px-5 py-3.5 text-left hidden md:table-cell">Lomba</th>
                     <th class="px-5 py-3.5 text-left hidden lg:table-cell">Metode</th>
                     <th class="px-5 py-3.5 text-right">Jumlah</th>
                     <th class="px-5 py-3.5 text-left">Status</th>
@@ -52,7 +53,10 @@
                         </a>
                     </td>
                     <td class="px-5 py-4 hidden md:table-cell">
-                        <span class="font-mono text-xs text-slate-500">{{ $payment->payment_reference ?? '—' }}</span>
+                        <span class="text-xs text-slate-500">{{ $payment->email ?? '—' }}</span>
+                    </td>
+                    <td class="px-5 py-4 hidden md:table-cell">
+                        <span class="text-xs text-slate-600">{{ $payment->competition_name ?? '—' }}</span>
                     </td>
                     <td class="px-5 py-4 hidden lg:table-cell">
                         <span class="badge badge-info text-xs">{{ $payment->payment_method ?? 'QRIS' }}</span>
@@ -66,29 +70,22 @@
                     </td>
                 </tr>
                 @empty
-                {{-- Demo rows --}}
-                @foreach([
-                    ['BRV-20260911-0001','PG-001','QRIS',150000,'paid','11 Sep 2026 09:14'],
-                    ['BRV-20260911-0002','PG-002','QRIS',75000,'pending','—'],
-                    ['BRV-20260911-0003','PG-003','QRIS',35000,'paid','10 Sep 2026 14:22'],
-                    ['BRV-20260911-0004','PG-004','QRIS',100000,'failed','—'],
-                    ['BRV-20260911-0005','PG-005','QRIS',150000,'paid','9 Sep 2026 16:05'],
-                    ['BRV-20260911-0006','PG-006','QRIS',50000,'expired','—'],
-                ] as $d)
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-5 py-4"><span class="font-mono text-xs font-bold text-[#2563EB]">{{ $d[0] }}</span></td>
-                    <td class="px-5 py-4 hidden md:table-cell"><span class="font-mono text-xs text-slate-500">{{ $d[1] }}</span></td>
-                    <td class="px-5 py-4 hidden lg:table-cell"><span class="badge badge-info text-xs">{{ $d[2] }}</span></td>
-                    <td class="px-5 py-4 text-right font-bold text-[#0B1040] text-xs">Rp{{ number_format($d[3],0,',','.') }}</td>
-                    <td class="px-5 py-4"><x-status-badge :status="$d[4]"/></td>
-                    <td class="px-5 py-4 hidden lg:table-cell text-xs text-slate-400">{{ $d[5] }}</td>
+                <tr>
+                    <td colspan="7" class="px-5 py-12 text-center">
+                        <div class="flex flex-col items-center gap-2">
+                            <svg class="w-10 h-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/>
+                            </svg>
+                            <p class="text-sm font-semibold text-slate-400">Belum ada transaksi pembayaran.</p>
+                            <p class="text-xs text-slate-300">Transaksi akan muncul setelah peserta menyelesaikan pembayaran.</p>
+                        </div>
+                    </td>
                 </tr>
-                @endforeach
                 @endforelse
             </tbody>
         </table>
     </div>
-    @if(isset($payments) && $payments->hasPages())
+    @if(isset($payments) && is_object($payments) && method_exists($payments, 'hasPages') && $payments->hasPages())
     <div class="px-5 py-4 border-t border-slate-100">{{ $payments->appends(request()->query())->links() }}</div>
     @endif
 </div>

@@ -7,14 +7,15 @@
 @php
 $reg = $registration ?? null;
 $payment_obj = $payment ?? null;
+$competition = $reg && isset($reg->competition) ? (object) ($reg->competition ?? []) : (object) ['name' => 'Event'];
 
-$order_code   = $reg ? $reg->order_code : 'BRV-20260911-0001';
-$amount       = $reg ? $reg->total_amount : 150000;
-$comp_name    = $reg ? ($reg->competition->name ?? 'Basket Competition') : 'Basket Competition';
-$participants = $reg ? $reg->total_participants : 3;
-$status       = $payment_obj ? $payment_obj->status : 'pending'; // pending|paid|failed|expired
-$expires_at   = $payment_obj && $payment_obj->expired_at ? $payment_obj->expired_at : now()->addMinutes(15)->toISOString();
-$qris_url     = $payment_obj ? $payment_obj->qris_url ?? null : null;
+$order_code   = $reg ? ($reg->order_code ?? 'BRV-') : 'BRV-';
+$amount       = $reg ? ($reg->total_amount ?? 0) : 0;
+$comp_name    = $competition->name ?? 'Event';
+$participants = $reg ? ($reg->participant_count ?? 0) : 0;
+$status       = $payment_obj ? ($payment_obj->status ?? 'pending') : 'pending';
+$expires_at   = $payment_obj && !empty($payment_obj->expires_at) ? $payment_obj->expires_at : now()->addMinutes(15)->toDateTimeString();
+$qris_url     = null;
 @endphp
 
 <div class="relative bg-gradient-to-b from-[#EFF6FF] to-white py-10">
@@ -140,7 +141,7 @@ $qris_url     = $payment_obj ? $payment_obj->qris_url ?? null : null;
                 </div>
 
                 {{-- Status check --}}
-                <div class="text-center">
+                <div class="text-center space-y-3">
                     <button
                         onclick="window.location.reload()"
                         class="btn-secondary btn-sm gap-2"
@@ -150,7 +151,8 @@ $qris_url     = $payment_obj ? $payment_obj->qris_url ?? null : null;
                         </svg>
                         Refresh Status Pembayaran
                     </button>
-                    <p class="text-xs text-[#94A3B8] mt-2">Status diperbarui otomatis setelah pembayaran dikonfirmasi</p>
+                    <a href="{{ route('payment.success', $order_code) }}" class="btn-primary btn-sm w-full justify-center">Simulasikan Pembayaran Berhasil</a>
+                    <p class="text-xs text-[#94A3B8]">Status diperbarui otomatis setelah pembayaran dikonfirmasi</p>
                 </div>
             </div>
 

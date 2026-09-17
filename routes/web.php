@@ -45,8 +45,9 @@ Route::prefix('payment')->name('payment.')->group(function () {
 
 // Tickets
 Route::prefix('ticket')->name('ticket.')->group(function () {
-    Route::get('/{code}',          [TicketController::class, 'show'])->name('show');
-    Route::get('/{code}/download', [TicketController::class, 'download'])->name('download');
+    Route::get('/group/{order_code}', [TicketController::class, 'group'])->name('group');
+    Route::get('/{code}',             [TicketController::class, 'show'])->name('show');
+    Route::get('/{code}/download',    [TicketController::class, 'download'])->name('download');
 });
 
 // Help center

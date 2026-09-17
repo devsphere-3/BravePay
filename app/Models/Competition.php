@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Competition extends Model
@@ -54,4 +55,15 @@ class Competition extends Model
         return 'Rp' . number_format($this->price, 0, ',', '.');
     }
 
+    /** Relasi ke pendaftaran */
+    public function registrations(): HasMany
+    {
+        return $this->hasMany(Registration::class);
+    }
+
+    /** Jumlah pendaftaran lunas */
+    public function getPaidRegistrationsCountAttribute(): int
+    {
+        return $this->registrations()->where('status', 'paid')->count();
+    }
 }

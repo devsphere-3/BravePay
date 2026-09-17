@@ -12,7 +12,11 @@ class AdminCompetitionController extends Controller
 {
     public function index(): View
     {
-        $competitions = Competition::orderByDesc('created_at')->get();
+        $competitions = Competition::withCount([
+            'registrations',
+            'registrations as paid_registrations_count' => fn ($q) => $q->where('status', 'paid'),
+        ])->orderByDesc('created_at')->get();
+
         return view('admin.competitions.index', compact('competitions'));
     }
 

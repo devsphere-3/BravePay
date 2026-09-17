@@ -7,26 +7,24 @@
 
 @php
 $reg = $registration ?? null;
-$order_code   = $reg ? $reg->order_code      : 'BRV-20260911-0001';
-$email        = $reg ? $reg->email           : 'wahyu@email.com';
-$phone        = $reg ? $reg->phone           : '+62812345678';
-$comp_name    = $reg ? ($reg->competition->name ?? 'Basket Competition') : 'Basket Competition';
-$participants = $reg ? $reg->participants    : collect([
-    (object)['name'=>'Wahyu Perwira','date_of_birth'=>'2005-03-15'],
-    (object)['name'=>'Budi Santoso', 'date_of_birth'=>'2004-07-22'],
-    (object)['name'=>'Sari Dewi',    'date_of_birth'=>'2006-01-10'],
-]);
-$total_participants = $reg ? $reg->total_participants : 3;
-$total_amount       = $reg ? $reg->total_amount       : 150000;
-$payment_status     = $reg && $reg->payment ? $reg->payment->status : 'paid';
-$payment_method     = $reg && $reg->payment ? ($reg->payment->payment_method ?? 'QRIS') : 'QRIS';
-$paid_at            = $reg && $reg->payment && $reg->payment->paid_at ? \Carbon\Carbon::parse($reg->payment->paid_at)->format('d M Y H:i') : '11 Sep 2026 09:14';
-$created_at         = $reg ? $reg->created_at->format('d M Y H:i') : '11 Sep 2026 08:00';
-$tickets            = $reg ? $reg->tickets  : collect([
-    (object)['ticket_code'=>'BRV-TKT-A8F92K','status'=>'active','participant'=>(object)['name'=>'Wahyu Perwira']],
-    (object)['ticket_code'=>'BRV-TKT-X92KD1','status'=>'used',  'participant'=>(object)['name'=>'Budi Santoso']],
-    (object)['ticket_code'=>'BRV-TKT-P7A21M','status'=>'active','participant'=>(object)['name'=>'Sari Dewi']],
-]);
+$payment = $reg && isset($reg->payment) ? (object)(is_array($reg->payment) ? $reg->payment : (array)$reg->payment) : (object)['status' => 'pending'];
+$competition = $reg && isset($reg->competition) ? (object)(is_array($reg->competition) ? $reg->competition : (array)$reg->competition) : (object)['name' => '—'];
+$participants = $reg && !empty($reg->participants)
+    ? collect($reg->participants)->map(fn ($p) => is_array($p) ? (object) $p : $p)
+    : collect([]);
+$order_code         = $reg ? ($reg->order_code ?? '—') : '—';
+$email              = $reg ? ($reg->email ?? '—') : '—';
+$phone              = $reg ? ($reg->phone ?? '—') : '—';
+$comp_name          = $competition->name ?? '—';
+$total_participants = $reg ? ($reg->participant_count ?? $reg->total_participants ?? $participants->count()) : 0;
+$total_amount       = $reg ? ($reg->total_amount ?? 0) : 0;
+$payment_status     = $payment->status ?? 'pending';
+$payment_method     = $payment->payment_method ?? 'QRIS';
+$paid_at            = !empty($payment->paid_at) ? \Carbon\Carbon::parse($payment->paid_at)->format('d M Y H:i') : '—';
+$created_at         = !empty($reg->created_at) ? \Carbon\Carbon::parse($reg->created_at)->format('d M Y H:i') : '—';
+$tickets            = $reg && !empty($reg->tickets)
+    ? collect($reg->tickets)->map(fn ($t) => is_array($t) ? (object) $t : $t)
+    : collect([]);
 @endphp
 
 {{-- Back + actions --}}
@@ -111,13 +109,11 @@ $tickets            = $reg ? $reg->tickets  : collect([
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
             <h2 class="font-bold text-[#0B1040] text-sm uppercase tracking-wide mb-3">Lomba</h2>
             <p class="font-bold text-[#0B1040]">{{ $comp_name }}</p>
-            @if($reg && $reg->competition)
+            @if($reg && !empty($reg->competition))
             <p class="text-xs text-slate-400 mt-1">
-                {{ $reg->competition->event_date ? \Carbon\Carbon::parse($reg->competition->event_date)->translatedFormat('d F Y') : '' }}
+                {{ !empty($reg->competition->event_date) ? \Carbon\Carbon::parse($reg->competition->event_date)->translatedFormat('d F Y') : '' }}
                 &bull; {{ $reg->competition->location ?? '' }}
             </p>
-            @else
-            <p class="text-xs text-slate-400 mt-1">20 Sep 2026 &bull; Batam</p>
             @endif
         </div>
 

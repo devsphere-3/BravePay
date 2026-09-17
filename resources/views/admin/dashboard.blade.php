@@ -7,14 +7,14 @@
 
 @php
 $stats = $stats ?? [
-    'total_registrations'  => 128,
-    'total_participants'   => 347,
-    'total_transactions'   => 128,
-    'paid_transactions'    => 115,
-    'pending_transactions' => 9,
-    'failed_transactions'  => 4,
-    'total_revenue'        => 17250000,
-    'checked_in'           => 89,
+    'total_registrations'  => 0,
+    'total_participants'   => 0,
+    'total_transactions'   => 0,
+    'paid_transactions'    => 0,
+    'pending_transactions' => 0,
+    'failed_transactions'  => 0,
+    'total_revenue'        => 0,
+    'checked_in'           => 0,
 ];
 $recent_registrations = $recent_registrations ?? collect([]);
 @endphp
@@ -81,38 +81,27 @@ $recent_registrations = $recent_registrations ?? collect([]);
                     @forelse($recent_registrations as $reg)
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-5 py-3.5">
-                            <a href="{{ route('admin.registrations.show', $reg->id) }}" class="font-mono text-xs text-[#2563EB] hover:underline font-bold">{{ $reg->order_code }}</a>
+                            <a href="{{ route('admin.registrations.show', $reg->id ?? $reg->order_code) }}" class="font-mono text-xs text-[#2563EB] hover:underline font-bold">{{ $reg->order_code ?? '—' }}</a>
                         </td>
                         <td class="px-5 py-3.5">
-                            <p class="font-semibold text-[#0B1040] truncate max-w-[120px]">{{ $reg->email }}</p>
+                            <p class="font-semibold text-[#0B1040] truncate max-w-[120px]">{{ $reg->email ?? '—' }}</p>
                         </td>
                         <td class="px-5 py-3.5 hidden sm:table-cell">
-                            <span class="text-slate-600 text-xs truncate max-w-[120px] block">{{ $reg->competition->name ?? '—' }}</span>
+                            <span class="text-slate-600 text-xs truncate max-w-[120px] block">{{ optional($reg->competition)->name ?? '—' }}</span>
                         </td>
                         <td class="px-5 py-3.5">
-                            <x-status-badge :status="$reg->payment ? $reg->payment->status : 'pending'"/>
+                            <x-status-badge :status="optional($reg->payment)->status ?? 'pending'"/>
                         </td>
                         <td class="px-5 py-3.5 text-right font-bold text-[#0B1040]">
-                            Rp{{ number_format($reg->total_amount, 0, ',', '.') }}
+                            Rp{{ number_format((int) ($reg->total_amount ?? 0), 0, ',', '.') }}
                         </td>
                     </tr>
                     @empty
-                    {{-- Demo rows --}}
-                    @foreach([
-                        ['BRV-20260911-0001','wahyu@email.com','Basket Competition','paid',150000],
-                        ['BRV-20260911-0002','budi@email.com','Futsal Championship','pending',75000],
-                        ['BRV-20260911-0003','sari@email.com','Desain Grafis','paid',35000],
-                        ['BRV-20260911-0004','eko@email.com','Basket Competition','failed',100000],
-                        ['BRV-20260911-0005','dina@email.com','Futsal Championship','paid',150000],
-                    ] as $demo)
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-5 py-3.5"><span class="font-mono text-xs text-[#2563EB] font-bold">{{ $demo[0] }}</span></td>
-                        <td class="px-5 py-3.5"><p class="font-semibold text-[#0B1040] text-xs">{{ $demo[1] }}</p></td>
-                        <td class="px-5 py-3.5 hidden sm:table-cell"><span class="text-slate-600 text-xs">{{ $demo[2] }}</span></td>
-                        <td class="px-5 py-3.5"><x-status-badge :status="$demo[3]"/></td>
-                        <td class="px-5 py-3.5 text-right font-bold text-[#0B1040] text-sm">Rp{{ number_format($demo[4],0,',','.') }}</td>
+                    <tr>
+                        <td colspan="5" class="px-5 py-10 text-center">
+                            <p class="text-sm text-slate-400">Belum ada pendaftaran.</p>
+                        </td>
                     </tr>
-                    @endforeach
                     @endforelse
                 </tbody>
             </table>

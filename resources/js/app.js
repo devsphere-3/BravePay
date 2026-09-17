@@ -26,11 +26,18 @@ Alpine.data('faq', () => ({
 }));
 
 // Registration form
-Alpine.data('registrationForm', (pricePerParticipant = 0, minPurchase = 1) => ({
+Alpine.data('registrationForm', (pricePerParticipant = 0, minPurchase = 1, unitLabel = 'peserta', flashMessage = '', competitionName = '') => ({
     participantCount: Math.max(1, minPurchase),
-    participants: [{ name: '', date_of_birth: '' }],
+    participants: [],
     pricePerParticipant,
     minPurchase,
+    unitLabel,
+    competitionName,
+    // Modal state — intentionally NOT set via flashMessage here;
+    // we initialise in init() so x-show has full control from the start.
+    minErrorOpen: false,
+    minErrorMessage: '',
+    minErrorIsInfo: false,   // true = info on page load, false = warning on submit
     get total() {
         return this.participantCount * this.pricePerParticipant;
     },
@@ -41,17 +48,72 @@ Alpine.data('registrationForm', (pricePerParticipant = 0, minPurchase = 1) => ({
             minimumFractionDigits: 0,
         }).format(this.total);
     },
-    updateCount(value) {
-        const min = Math.max(1, this.minPurchase || 1);
-        const count = Math.max(min, Math.min(20, parseInt(value) || min));
+    /**
+     * Tampilkan modal peringatan minimum.
+     * @param {string} message  - pesan kustom (opsional)
+     * @param {boolean} isInfo  - true = info awal halaman, false = warning submit
+     */
+    showMinError(message = '', isInfo = false) {
+        const name = this.competitionName ? `"${this.competitionName}"` : 'event ini';
+        const unitText = this.minPurchase === 1
+            ? `1 ${this.unitLabel}`
+            : `${this.minPurchase} ${this.unitLabel}`;
+
+        this.minErrorMessage = message || (
+            isInfo
+                ? `Event ${name} mengharuskan pendaftaran minimal ${unitText} dalam satu transaksi. Jumlah peserta sudah otomatis disesuaikan.`
+                : `Minimal pembelian untuk event ${name} adalah ${unitText}. Silakan sesuaikan jumlah peserta sebelum melanjutkan.`
+        );
+        this.minErrorIsInfo = isInfo;
+        this.minErrorOpen = true;
+    },
+    closeMinError() {
+        this.minErrorOpen = false;
+        this.minErrorMessage = '';
+    },
+    syncParticipants() {
+        const count = Math.max(this.minPurchase || 1, Number(this.participantCount) || this.minPurchase || 1);
         this.participantCount = count;
         while (this.participants.length < count) {
             this.participants.push({ name: '', date_of_birth: '' });
         }
         this.participants = this.participants.slice(0, count);
     },
+    validateCount(value) {
+        const safeValue = Number.parseInt(value, 10);
+        const min = Math.max(1, this.minPurchase || 1);
+
+        if (Number.isFinite(safeValue) && safeValue < min) {
+            this.participantCount = min;
+            this.showMinError('', false);
+            this.syncParticipants();
+            return;
+        }
+
+        const nextValue = Number.isFinite(safeValue) ? Math.max(min, safeValue) : min;
+        this.participantCount = nextValue;
+        this.syncParticipants();
+    },
+    updateCount(value) {
+        this.validateCount(value);
+    },
     init() {
-        this.updateCount(this.participantCount);
+        this.syncParticipants();
+
+        // Jika ada flash error dari server, tampilkan sebagai warning
+        if (flashMessage) {
+            this.$nextTick(() => {
+                this.minErrorMessage = flashMessage;
+                this.minErrorIsInfo = false;
+                this.minErrorOpen = true;
+            });
+            return;
+        }
+
+        // Jika min_purchase > 1, tampilkan info saat halaman pertama dibuka
+        if (this.minPurchase > 1) {
+            this.$nextTick(() => this.showMinError('', true));
+        }
     },
 }));
 
