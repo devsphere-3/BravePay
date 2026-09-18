@@ -229,19 +229,9 @@
             <span class="text-xs text-slate-400">{{ $ci->checked_in_at ? \Carbon\Carbon::parse($ci->checked_in_at)->format('H:i') : '' }}</span>
         </div>
         @empty
-        @foreach([
-            ['Wahyu Perwira','BRV-TKT-A8F92K','09:14'],
-            ['Budi Santoso','BRV-TKT-X92KD1','09:22'],
-            ['Sari Dewi','BRV-TKT-P7A21M','09:35'],
-        ] as $d)
-        <div class="flex items-center gap-3 px-5 py-3 border-b border-slate-50 last:border-0">
-            <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-            </div>
-            <div class="flex-1"><p class="text-sm font-semibold text-[#0B1040]">{{ $d[0] }}</p><p class="text-xs text-slate-400 font-mono">{{ $d[1] }}</p></div>
-            <span class="text-xs text-slate-400">{{ $d[2] }}</span>
+        <div class="px-5 py-8 text-center">
+            <p class="text-sm text-slate-400">Belum ada check-in hari ini.</p>
         </div>
-        @endforeach
         @endforelse
     </div>
 </div>

@@ -87,7 +87,9 @@ $tickets            = $reg && !empty($reg->tickets)
                 @foreach($tickets as $t)
                 <div class="flex items-center gap-3 bg-slate-50 rounded-xl p-3">
                     <div class="flex-1">
-                        <p class="font-semibold text-[#0B1040] text-sm">{{ $t->participant->name ?? '—' }}</p>
+                        <p class="font-semibold text-[#0B1040] text-sm">
+                            {{ is_object($t->participant ?? null) ? ($t->participant->name ?? '—') : ($t->participant ?? '—') }}
+                        </p>
                         <p class="font-mono text-xs text-[#2563EB]">{{ $t->ticket_code }}</p>
                     </div>
                     <x-status-badge :status="$t->status"/>
@@ -144,13 +146,24 @@ $tickets            = $reg && !empty($reg->tickets)
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
             <h2 class="font-bold text-[#0B1040] text-sm uppercase tracking-wide mb-3">Aksi</h2>
             <div class="space-y-2">
-                <form action="{{ route('admin.tickets.resend', 0) }}" method="POST">
+                @if($payment_status === 'paid' && $tickets->isNotEmpty())
+                <form action="{{ route('admin.tickets.resend', $order_code) }}" method="POST">
                     @csrf
                     <button type="submit" class="btn-secondary w-full justify-center text-sm py-2.5 gap-2">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                         Kirim Ulang E-Ticket
                     </button>
                 </form>
+                <a href="{{ route('ticket.group', $order_code) }}" target="_blank"
+                   class="btn-secondary w-full justify-center text-sm py-2.5 gap-2 flex items-center">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
+                    Lihat Semua Tiket
+                </a>
+                @else
+                <p class="text-xs text-slate-400 text-center py-2">
+                    Tiket tersedia setelah pembayaran lunas.
+                </p>
+                @endif
             </div>
         </div>
     </div>

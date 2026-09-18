@@ -120,8 +120,26 @@ class PaymentController extends Controller
 
     public function check(Request $request)
     {
-        $request->validate(['order_code' => ['required', 'string']]);
-        return back()->with('not_found', true);
+        $request->validate(['order_code' => ['required', 'string', 'max:50']]);
+
+        $code = strtoupper(trim($request->order_code));
+        $registration = Registration::with('competition')
+            ->where('order_code', $code)
+            ->first();
+
+        if (! $registration) {
+            return back()
+                ->withInput()
+                ->with('not_found', true);
+        }
+
+        // Normalise untuk view (view expects ->payment->status)
+        $registration->payment = (object) [
+            'status' => $registration->status,
+            'amount' => $registration->total_amount,
+        ];
+
+        return view('payment.check', compact('registration'));
     }
 
     public function webhook(Request $request)
