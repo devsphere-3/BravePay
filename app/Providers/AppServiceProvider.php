@@ -49,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
         $this->definePermissionGate('admin.view_customers');
         $this->definePermissionGate('admin.view_registrations');
         $this->definePermissionGate('admin.view_participants');
+        $this->definePermissionGate('admin.view_payments');
         $this->definePermissionGate('admin.scan_ticket');
         $this->definePermissionGate('admin.verify_checkin');
         $this->definePermissionGate('admin.manage_ticket');
@@ -57,6 +58,7 @@ class AppServiceProvider extends ServiceProvider
         $this->definePermissionGate('admin.contact_customer');
         $this->definePermissionGate('admin.view_reports');
         $this->definePermissionGate('admin.view_activity_logs');
+        $this->definePermissionGate('admin.manage_settings');
         $this->definePermissionGate('admin.delete_registration');
 
         // ── Finance ────────────────────────────────────────────────────

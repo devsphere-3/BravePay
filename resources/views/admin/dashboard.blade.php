@@ -20,7 +20,7 @@ $recent_registrations = $recent_registrations ?? collect([]);
 @endphp
 
 {{-- Stats grid --}}
-<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<div class="grid grid-cols-1 min-[420px]:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
     @foreach([
         ['label'=>'Total Pendaftaran','value'=>number_format($stats['total_registrations']),'icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2','color'=>'bg-blue-50 text-blue-600','accent'=>'bg-blue-600'],
         ['label'=>'Total Peserta','value'=>number_format($stats['total_participants']),'icon'=>'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z','color'=>'bg-indigo-50 text-indigo-600','accent'=>'bg-indigo-600'],
@@ -44,7 +44,7 @@ $recent_registrations = $recent_registrations ?? collect([]);
 </div>
 
 {{-- Second row --}}
-<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mb-8">
+<div class="grid grid-cols-1 min-[420px]:grid-cols-3 gap-4 mb-8">
     @foreach([
         ['label'=>'Menunggu Pembayaran','value'=>number_format($stats['pending_transactions']),'color'=>'bg-amber-50 border-amber-200','text'=>'text-amber-600'],
         ['label'=>'Pembayaran Gagal','value'=>number_format($stats['failed_transactions']),'color'=>'bg-red-50 border-red-200','text'=>'text-red-600'],

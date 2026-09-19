@@ -18,13 +18,13 @@
 
 {{-- Filters --}}
 <form method="GET" action="{{ route('admin.tickets.index') }}" class="bg-white rounded-2xl border border-slate-200 p-4 mb-6 shadow-sm">
-    <div class="flex flex-wrap gap-3">
+    <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_auto_auto] gap-3">
         <input
             type="search" name="q" value="{{ $q ?? '' }}"
             placeholder="Cari order ID, email, nama peserta, lomba..."
-            class="form-input text-sm flex-1 min-w-[200px]"
+            class="form-input text-sm min-w-0"
         >
-        <select name="status" class="form-select text-sm w-auto min-w-[140px]" onchange="this.form.submit()">
+        <select name="status" class="form-select text-sm w-full sm:w-auto min-w-0 sm:min-w-[140px]" onchange="this.form.submit()">
             <option value="">Semua Status</option>
             <option value="active"    {{ ($filterStatus ?? '') === 'active'    ? 'selected' : '' }}>Aktif</option>
             <option value="used"      {{ ($filterStatus ?? '') === 'used'      ? 'selected' : '' }}>Digunakan</option>
@@ -59,7 +59,7 @@
 
         {{-- Group header row --}}
         <div
-            class="flex items-center gap-4 px-5 py-4 cursor-pointer hover:bg-slate-50 transition-colors select-none"
+            class="flex flex-wrap items-center gap-3 sm:gap-4 px-4 sm:px-5 py-4 cursor-pointer hover:bg-slate-50 transition-colors select-none"
             @click="toggleGroup({{ $gId }})"
         >
             {{-- Expand chevron --}}
@@ -124,7 +124,7 @@
         >
             <div class="divide-y divide-slate-100">
                 @foreach($group->tickets as $idx => $t)
-                <div class="flex items-center gap-4 px-5 py-3.5 hover:bg-slate-50/60 transition-colors">
+                    <div class="flex flex-wrap items-center gap-3 px-4 sm:px-5 py-3.5 hover:bg-slate-50/60 transition-colors">
 
                     {{-- Nomor urut --}}
                     <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0">

@@ -300,6 +300,16 @@
         z-index: 40;
     }
 
+    .admin-sidebar nav {
+        padding-bottom: 6rem;
+    }
+
+    @media (max-width: 639px) {
+        .admin-sidebar {
+            width: min(280px, 86vw);
+        }
+    }
+
     .sidebar-link {
         display: flex;
         align-items: center;

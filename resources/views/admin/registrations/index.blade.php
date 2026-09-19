@@ -19,17 +19,17 @@
 
 {{-- Filters --}}
 <form method="GET" action="{{ route('admin.registrations.index') }}" class="bg-white rounded-2xl border border-slate-200 p-4 mb-6 shadow-sm">
-    <div class="flex flex-wrap gap-3">
-        <div class="flex-1 min-w-[200px]">
+    <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_auto_auto_auto] gap-3">
+        <div class="min-w-0">
             <input type="search" name="q" value="{{ request('q') }}" placeholder="Cari order ID, email..." class="form-input text-sm">
         </div>
-        <select name="competition_id" class="form-select text-sm w-auto min-w-[160px]" onchange="this.form.submit()">
+        <select name="competition_id" class="form-select text-sm w-full sm:w-auto min-w-0 sm:min-w-[160px]" onchange="this.form.submit()">
             <option value="">Semua Lomba</option>
             @foreach($competitions ?? [] as $c)
             <option value="{{ $c->id }}" {{ request('competition_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
             @endforeach
         </select>
-        <select name="status" class="form-select text-sm w-auto min-w-[140px]" onchange="this.form.submit()">
+        <select name="status" class="form-select text-sm w-full sm:w-auto min-w-0 sm:min-w-[140px]" onchange="this.form.submit()">
             <option value="">Semua Status</option>
             <option value="pending"  {{ request('status') === 'pending'  ? 'selected' : '' }}>Pending</option>
             <option value="paid"     {{ request('status') === 'paid'     ? 'selected' : '' }}>Lunas</option>

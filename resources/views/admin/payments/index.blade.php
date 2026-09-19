@@ -14,9 +14,9 @@
 
 {{-- Filters --}}
 <form method="GET" action="{{ route('admin.payments.index') }}" class="bg-white rounded-2xl border border-slate-200 p-4 mb-6 shadow-sm">
-    <div class="flex flex-wrap gap-3">
-        <input type="search" name="q" value="{{ request('q') }}" placeholder="Cari order ID, payment ID..." class="form-input text-sm flex-1 min-w-[180px]">
-        <select name="status" class="form-select text-sm w-auto min-w-[140px]" onchange="this.form.submit()">
+    <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_auto_auto] gap-3">
+        <input type="search" name="q" value="{{ request('q') }}" placeholder="Cari order ID, payment ID..." class="form-input text-sm min-w-0">
+        <select name="status" class="form-select text-sm w-full sm:w-auto min-w-0 sm:min-w-[140px]" onchange="this.form.submit()">
             <option value="">Semua Status</option>
             @foreach(['pending'=>'Pending','paid'=>'Lunas','failed'=>'Gagal','expired'=>'Kadaluarsa','refunded'=>'Refund'] as $val => $label)
             <option value="{{ $val }}" {{ request('status') === $val ? 'selected' : '' }}>{{ $label }}</option>

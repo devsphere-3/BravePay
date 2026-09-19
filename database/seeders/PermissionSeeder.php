@@ -26,6 +26,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'admin.view_customers',      'display_name' => 'Lihat Daftar Customer',             'group_name' => 'admin'],
             ['name' => 'admin.view_registrations',  'display_name' => 'Lihat Data Registrasi',             'group_name' => 'admin'],
             ['name' => 'admin.view_participants',   'display_name' => 'Lihat Data Peserta',                'group_name' => 'admin'],
+            ['name' => 'admin.view_payments',       'display_name' => 'Lihat Data Pembayaran',             'group_name' => 'admin'],
             ['name' => 'admin.scan_ticket',         'display_name' => 'Scan QR Tiket (Check-in)',          'group_name' => 'admin'],
             ['name' => 'admin.verify_checkin',      'display_name' => 'Verifikasi Kehadiran Peserta',      'group_name' => 'admin'],
             ['name' => 'admin.manage_ticket',       'display_name' => 'Kelola Tiket (Resend dll)',         'group_name' => 'admin'],
@@ -34,6 +35,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'admin.contact_customer',    'display_name' => 'Kirim Pesan ke Customer',           'group_name' => 'admin'],
             ['name' => 'admin.view_reports',        'display_name' => 'Lihat Laporan Peserta',             'group_name' => 'admin'],
             ['name' => 'admin.view_activity_logs',  'display_name' => 'Lihat Log Aktivitas Sendiri',       'group_name' => 'admin'],
+            ['name' => 'admin.manage_settings',     'display_name' => 'Kelola Pengaturan Admin',           'group_name' => 'admin'],
             ['name' => 'admin.delete_registration', 'display_name' => 'Hapus Data Registrasi',             'group_name' => 'admin'],
 
             // ── FINANCE ───────────────────────────────────────────────────

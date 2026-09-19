@@ -82,14 +82,14 @@
         {{-- Input mode --}}
         <div class="p-6">
             <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Masukkan Kode Tiket</p>
-            <div class="flex gap-2">
+            <div class="flex flex-col min-[420px]:flex-row gap-2">
                 <input
                     type="text"
                     name="ticket_code"
                     x-model="ticketCode"
                     @keydown.enter="validate()"
                     placeholder="BRV-TKT-A8F92K"
-                    class="form-input flex-1 font-mono text-sm uppercase"
+                    class="form-input min-w-0 flex-1 font-mono text-sm uppercase"
                     autocomplete="off"
                     autocorrect="off"
                     spellcheck="false"
@@ -97,7 +97,7 @@
                 <button
                     @click="validate()"
                     :disabled="!ticketCode.trim() || loading"
-                    class="btn-primary btn-sm flex-shrink-0 disabled:opacity-50 min-w-[80px]"
+                    class="btn-primary btn-sm w-full min-[420px]:w-auto flex-shrink-0 disabled:opacity-50 min-w-[80px]"
                 >
                     <svg x-show="loading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
                     <span x-show="!loading">Cek</span>
@@ -125,7 +125,7 @@
             </div>
             <div class="p-6 space-y-3">
                 <template x-if="result">
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 min-[420px]:grid-cols-2 gap-3">
                         <div class="bg-slate-50 rounded-xl p-3">
                             <p class="text-xs text-slate-400 mb-0.5">Peserta</p>
                             <p class="font-bold text-[#0B1040] text-sm" x-text="result.participant_name ?? '—'"></p>

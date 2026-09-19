@@ -45,7 +45,7 @@ class AuthController extends Controller
 
         // Attempt login
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
-            RateLimiter::hit($throttleKey, decay: 60);
+            RateLimiter::hit($throttleKey, 60);
 
             return back()->withErrors([
                 // Pesan generik — tidak membedakan email tidak ada vs password salah

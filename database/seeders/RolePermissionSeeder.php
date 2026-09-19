@@ -28,6 +28,7 @@ class RolePermissionSeeder extends Seeder
                 'admin.view_customers',
                 'admin.view_registrations',
                 'admin.view_participants',
+                'admin.view_payments',
                 'admin.scan_ticket',
                 'admin.verify_checkin',
                 'admin.manage_ticket',
@@ -36,6 +37,7 @@ class RolePermissionSeeder extends Seeder
                 'admin.contact_customer',
                 'admin.view_reports',
                 'admin.view_activity_logs',
+                'admin.manage_settings',
                 'admin.delete_registration',
             ],
 

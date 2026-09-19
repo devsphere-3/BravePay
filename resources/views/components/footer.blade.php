@@ -67,7 +67,7 @@
                     <li><a href="#" class="text-blue-200/60 hover:text-white text-sm transition-colors">Pusat Bantuan</a></li>
                     <li><a href="#" class="text-blue-200/60 hover:text-white text-sm transition-colors">Cek Status Pembayaran</a></li>
                     <li><a href="#" class="text-blue-200/60 hover:text-white text-sm transition-colors">Kirim Ulang E-Ticket</a></li>
-                    <li><a href="{{ route('admin.login') }}" class="text-blue-200/60 hover:text-white text-sm transition-colors">Admin Login</a></li>
+                    <li><a href="{{ route('login') }}" class="text-blue-200/60 hover:text-white text-sm transition-colors">Login</a></li>
                 </ul>
             </div>
         </div>

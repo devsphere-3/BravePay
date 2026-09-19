@@ -81,10 +81,14 @@ Route::prefix('admin')
      ->middleware(['auth', 'role:admin,superadmin', 'admin.activity'])
      ->group(function () {
 
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+            ->middleware('permission:admin.view_dashboard')
+            ->name('dashboard');
 
     // Kompetisi
-    Route::prefix('competitions')->name('competitions.')->group(function () {
+        Route::prefix('competitions')->name('competitions.')
+            ->middleware('permission:admin.manage_competition')
+            ->group(function () {
         Route::get('/',            [AdminCompetitionController::class, 'index'])->name('index');
         Route::get('/create',      [AdminCompetitionController::class, 'create'])->name('create');
         Route::post('/',           [AdminCompetitionController::class, 'store'])->name('store');
@@ -94,33 +98,53 @@ Route::prefix('admin')
     });
 
     // Registrasi peserta
-    Route::prefix('registrations')->name('registrations.')->group(function () {
+    Route::prefix('registrations')->name('registrations.')
+         ->middleware('permission:admin.view_registrations')
+         ->group(function () {
         Route::get('/',        [AdminRegistrationController::class, 'index'])->name('index');
         Route::get('/{id}',    [AdminRegistrationController::class, 'show'])->name('show');
-        Route::delete('/{id}', [AdminRegistrationController::class, 'destroy'])->name('destroy');
+        Route::delete('/{id}', [AdminRegistrationController::class, 'destroy'])
+             ->middleware('permission:admin.delete_registration')
+             ->name('destroy');
     });
 
     // Pembayaran (admin view — read only)
-    Route::prefix('payments')->name('payments.')->group(function () {
+        Route::prefix('payments')->name('payments.')
+            ->middleware('permission:admin.view_payments')
+            ->group(function () {
         Route::get('/',      [AdminPaymentController::class, 'index'])->name('index');
         Route::get('/{id}',  [AdminPaymentController::class, 'show'])->name('show');
     });
 
     // Tiket
-    Route::prefix('tickets')->name('tickets.')->group(function () {
+        Route::prefix('tickets')->name('tickets.')
+            ->middleware('permission:admin.manage_ticket')
+            ->group(function () {
         Route::get('/',            [AdminTicketController::class, 'index'])->name('index');
         Route::post('/{id}/resend',[AdminTicketController::class, 'resend'])->name('resend');
     });
 
     // Check-in / Scan
-    Route::get('/checkin',              [AdminCheckinController::class, 'index'])->name('checkin');
-    Route::get('/api/checkin/{code}',   [AdminCheckinController::class, 'validate'])->name('checkin.validate');
-    Route::post('/api/checkin/{code}',  [AdminCheckinController::class, 'checkin'])->name('checkin.post');
+        Route::get('/checkin',              [AdminCheckinController::class, 'index'])
+            ->middleware('permission:admin.scan_ticket')
+            ->name('checkin');
+        Route::get('/api/checkin/{code}',   [AdminCheckinController::class, 'validate'])
+            ->middleware('permission:admin.scan_ticket')
+            ->name('checkin.validate');
+        Route::post('/api/checkin/{code}',  [AdminCheckinController::class, 'checkin'])
+            ->middleware('permission:admin.verify_checkin')
+            ->name('checkin.post');
 
     // Settings & logs
-    Route::get('/settings',         [AdminSettingsController::class, 'index'])->name('settings');
-    Route::post('/settings',        [AdminSettingsController::class, 'update'])->name('settings.update');
-    Route::get('/activity-logs',    [AdminActivityLogController::class, 'index'])->name('activity-logs.index');
+        Route::get('/settings',         [AdminSettingsController::class, 'index'])
+            ->middleware('permission:admin.manage_settings')
+            ->name('settings');
+        Route::post('/settings',        [AdminSettingsController::class, 'update'])
+            ->middleware('permission:admin.manage_settings')
+            ->name('settings.update');
+        Route::get('/activity-logs',    [AdminActivityLogController::class, 'index'])
+            ->middleware('permission:admin.view_activity_logs')
+            ->name('activity-logs.index');
 });
 
 // ══════════════════════════════════════════════════════════════════
@@ -134,21 +158,25 @@ Route::prefix('finance')
 
     Route::get('/dashboard', function () {
         return view('finance.dashboard');
-    })->name('dashboard');
+    })->middleware('permission:finance.view_dashboard')->name('dashboard');
 
-    Route::prefix('payments')->name('payments.')->group(function () {
+        Route::prefix('payments')->name('payments.')
+            ->middleware('permission:finance.view_payments')
+            ->group(function () {
         Route::get('/',     [AdminPaymentController::class, 'index'])->name('index');
         Route::get('/{id}', [AdminPaymentController::class, 'show'])->name('show');
     });
 
-    Route::prefix('registrations')->name('registrations.')->group(function () {
+        Route::prefix('registrations')->name('registrations.')
+            ->middleware('permission:finance.view_registrations')
+            ->group(function () {
         Route::get('/',     [AdminRegistrationController::class, 'index'])->name('index');
         Route::get('/{id}', [AdminRegistrationController::class, 'show'])->name('show');
     });
 
     Route::get('/reports', function () {
         return view('finance.reports');
-    })->name('reports');
+    })->middleware('permission:finance.view_reports')->name('reports');
 });
 
 // ══════════════════════════════════════════════════════════════════
@@ -162,23 +190,23 @@ Route::prefix('sponsor')
 
     Route::get('/dashboard', function () {
         return view('sponsor.dashboard');
-    })->name('dashboard');
+    })->middleware('permission:sponsor.view_dashboard')->name('dashboard');
 
     Route::get('/statistics', function () {
         return view('sponsor.statistics');
-    })->name('statistics');
+    })->middleware('permission:sponsor.view_statistics')->name('statistics');
 
     Route::get('/participants', function () {
         return view('sponsor.participants');
-    })->name('participants');
+    })->middleware('permission:sponsor.view_participants')->name('participants');
 
     Route::get('/events', function () {
         return view('sponsor.events');
-    })->name('events');
+    })->middleware('permission:sponsor.view_event_info')->name('events');
 
     Route::get('/reports', function () {
         return view('sponsor.reports');
-    })->name('reports');
+    })->middleware('permission:sponsor.view_reports')->name('reports');
 });
 
 // ══════════════════════════════════════════════════════════════════
@@ -192,10 +220,12 @@ Route::prefix('superadmin')
 
     Route::get('/dashboard', function () {
         return view('superadmin.dashboard');
-    })->name('dashboard');
+    })->middleware('permission:superadmin.view_dashboard')->name('dashboard');
 
     // ── User Management ────────────────────────────────────────
-    Route::prefix('users')->name('users.')->group(function () {
+    Route::prefix('users')->name('users.')
+         ->middleware('permission:superadmin.manage_customers')
+         ->group(function () {
         Route::get('/',        function () { return view('superadmin.users.index'); })->name('index');
         Route::get('/create',  function () { return view('superadmin.users.create'); })->name('create');
         Route::get('/{id}',    function () { return view('superadmin.users.show'); })->name('show');
@@ -203,11 +233,17 @@ Route::prefix('superadmin')
     });
 
     // ── Role & Permission Management ───────────────────────────
-    Route::get('/roles',       function () { return view('superadmin.roles.index'); })->name('roles.index');
-    Route::get('/permissions', function () { return view('superadmin.permissions.index'); })->name('permissions.index');
+        Route::get('/roles',       function () { return view('superadmin.roles.index'); })
+            ->middleware('permission:superadmin.manage_roles')
+            ->name('roles.index');
+        Route::get('/permissions', function () { return view('superadmin.permissions.index'); })
+            ->middleware('permission:superadmin.manage_permissions')
+            ->name('permissions.index');
 
     // ── Event & Kompetisi (via admin controller) ───────────────
-    Route::prefix('competitions')->name('competitions.')->group(function () {
+        Route::prefix('competitions')->name('competitions.')
+            ->middleware('permission:superadmin.manage_events')
+            ->group(function () {
         Route::get('/',            [AdminCompetitionController::class, 'index'])->name('index');
         Route::get('/create',      [AdminCompetitionController::class, 'create'])->name('create');
         Route::post('/',           [AdminCompetitionController::class, 'store'])->name('store');
@@ -217,23 +253,35 @@ Route::prefix('superadmin')
     });
 
     // ── Payments & Registrations ───────────────────────────────
-    Route::prefix('payments')->name('payments.')->group(function () {
+        Route::prefix('payments')->name('payments.')
+            ->middleware('permission:superadmin.view_transactions')
+            ->group(function () {
         Route::get('/',     [AdminPaymentController::class, 'index'])->name('index');
         Route::get('/{id}', [AdminPaymentController::class, 'show'])->name('show');
     });
 
-    Route::prefix('registrations')->name('registrations.')->group(function () {
+        Route::prefix('registrations')->name('registrations.')
+            ->middleware('permission:superadmin.view_all_data')
+            ->group(function () {
         Route::get('/',     [AdminRegistrationController::class, 'index'])->name('index');
         Route::get('/{id}', [AdminRegistrationController::class, 'show'])->name('show');
     });
 
     // ── Reports & Logs ─────────────────────────────────────────
-    Route::get('/reports', function () { return view('superadmin.reports'); })->name('reports');
-    Route::get('/logs',    [AdminActivityLogController::class, 'index'])->name('logs.index');
+        Route::get('/reports', function () { return view('superadmin.reports'); })
+            ->middleware('permission:superadmin.view_reports')
+            ->name('reports');
+        Route::get('/logs',    [AdminActivityLogController::class, 'index'])
+            ->middleware('permission:superadmin.view_logs')
+            ->name('logs.index');
 
     // ── Settings ───────────────────────────────────────────────
-    Route::get('/settings',  [AdminSettingsController::class, 'index'])->name('settings');
-    Route::post('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
+        Route::get('/settings',  [AdminSettingsController::class, 'index'])
+            ->middleware('permission:superadmin.manage_settings')
+            ->name('settings');
+        Route::post('/settings', [AdminSettingsController::class, 'update'])
+            ->middleware('permission:superadmin.manage_settings')
+            ->name('settings.update');
 });
 
 // ══════════════════════════════════════════════════════════════════
