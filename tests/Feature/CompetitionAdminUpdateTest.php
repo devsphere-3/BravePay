@@ -23,7 +23,7 @@ class CompetitionAdminUpdateTest extends TestCase
             'category' => 'Olahraga',
             'price' => 50000,
             'event_date' => '2026-09-20',
-            'location' => 'Batam',
+            'location' => 'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands',
             'status' => 'open',
             'unit' => 'peserta',
             'schedule' => json_encode([
@@ -39,7 +39,7 @@ class CompetitionAdminUpdateTest extends TestCase
                 'category' => 'Olahraga',
                 'price' => 60000,
                 'event_date' => '2026-10-20',
-                'location' => 'Batam',
+                'location' => 'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands',
                 'status' => 'open',
                 'unit' => 'team',
                 'min_purchase' => 2,
@@ -148,7 +148,7 @@ class CompetitionAdminUpdateTest extends TestCase
             'price' => 250000,
             'min_purchase' => 3,
             'event_date' => '2026-10-01',
-            'location' => 'Batam',
+            'location' => 'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands',
             'status' => 'open',
             'unit' => 'team',
         ]);
@@ -197,7 +197,7 @@ class CompetitionAdminUpdateTest extends TestCase
             'price' => 250000,
             'min_purchase' => 3,
             'event_date' => '2026-10-01',
-            'location' => 'Batam',
+            'location' => 'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands',
             'status' => 'open',
             'unit' => 'team',
         ]);

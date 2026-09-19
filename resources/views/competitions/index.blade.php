@@ -64,12 +64,12 @@
                 {{-- Demo state --}}
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                     @foreach([
-                        ['name'=>'Basket Competition','cat'=>'Olahraga','date'=>'20 Sep 2026','loc'=>'Batam','price'=>50000,'status'=>'open','event'=>'GEN FEST 2026','q'=>80],
-                        ['name'=>'Futsal Championship','cat'=>'Olahraga','date'=>'5 Okt 2026','loc'=>'Batam','price'=>75000,'status'=>'open','event'=>'YOUTH SPORT FEST','q'=>45],
+                        ['name'=>'Basket Competition','cat'=>'Olahraga','date'=>'20 Sep 2026','loc'=>'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands','price'=>50000,'status'=>'open','event'=>'GEN FEST 2026','q'=>80],
+                        ['name'=>'Futsal Championship','cat'=>'Olahraga','date'=>'5 Okt 2026','loc'=>'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands','price'=>75000,'status'=>'open','event'=>'YOUTH SPORT FEST','q'=>45],
                         ['name'=>'Desain Grafis','cat'=>'Kreatif','date'=>'12 Okt 2026','loc'=>'Online','price'=>35000,'status'=>'coming_soon','event'=>'CREATIVE FEST','q'=>0],
-                        ['name'=>'Tari Tradisional','cat'=>'Seni & Musik','date'=>'8 Okt 2026','loc'=>'Batam','price'=>40000,'status'=>'open','event'=>'BUDAYA FEST','q'=>30],
+                        ['name'=>'Tari Tradisional','cat'=>'Seni & Musik','date'=>'8 Okt 2026','loc'=>'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands','price'=>40000,'status'=>'open','event'=>'BUDAYA FEST','q'=>30],
                         ['name'=>'Web Development','cat'=>'Teknologi','date'=>'15 Nov 2026','loc'=>'Online','price'=>45000,'status'=>'open','event'=>'TECH COMP','q'=>60],
-                        ['name'=>'Fotografi Alam','cat'=>'Fotografi','date'=>'1 Nov 2026','loc'=>'Batam','price'=>60000,'status'=>'full','event'=>'PHOTO FEST','q'=>100],
+                        ['name'=>'Fotografi Alam','cat'=>'Fotografi','date'=>'1 Nov 2026','loc'=>'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands','price'=>60000,'status'=>'full','event'=>'PHOTO FEST','q'=>100],
                     ] as $i => $demo)
                     <x-competition-card
                         :name="$demo['name']"

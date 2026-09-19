@@ -333,7 +333,7 @@ Contoh:
 │          [ QR CODE ]            │
 │                                 │
 │  20 September 2026              │
-│  Batam                          │
+│  Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands                          │
 └─────────────────────────────────┘
 ```
 

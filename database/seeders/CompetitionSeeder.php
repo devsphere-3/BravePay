@@ -23,7 +23,7 @@ class CompetitionSeeder extends Seeder
                 'min_purchase'    => 1,
                 'quota'           => 1000,
                 'event_date'      => '2026-09-20',
-                'location'        => 'Batam',
+                'location'        => 'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands',
                 'status'          => 'open',
                 'description'     =>
                     "Fun Run 5K adalah ajang lari santai yang terbuka untuk komunitas lari, pelajar, mahasiswa, dan masyarakat umum. " .
@@ -57,13 +57,13 @@ class CompetitionSeeder extends Seeder
                 'min_purchase'    => 1,
                 'quota'           => 1500,
                 'event_date'      => '2026-09-20',
-                'location'        => 'Batam',
+                'location'        => 'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands',
                 'status'          => 'open',
                 'description'     =>
-                    "Kompetisi Paskibra antar pelajar tingkat SMA/SMK/MA se-Kota Batam & Kepulauan Riau. " .
+                    "Kompetisi Paskibra antar pelajar tingkat SMA/SMK/MA se-Kota Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands & Kepulauan Riau. " .
                     "Uji kemampuan baris-berbaris dan kedisiplinan tim kamu di ajang bergengsi ini.",
                 'requirements'    =>
-                    "- Khusus pelajar aktif SMA/SMK/MA sederajat se-Kota Batam & Kepri\n" .
+                    "- Khusus pelajar aktif SMA/SMK/MA sederajat se-Kota Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands & Kepri\n" .
                     "- Usia peserta 16–20 tahun\n" .
                     "- Membawa kartu pelajar/surat keterangan aktif\n" .
                     "- Seragam Paskibra lengkap dan rapi\n" .
@@ -86,7 +86,7 @@ class CompetitionSeeder extends Seeder
                 'min_purchase'    => 3,
                 'quota'           => 15,
                 'event_date'      => '2026-09-20',
-                'location'        => 'Batam',
+                'location'        => 'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands',
                 'status'          => 'open',
                 'description'     =>
                     "Tunjukkan bakat seni tari modern dan K-Pop cover terbaikmu! Dance Competition terbuka untuk pelajar SMA yang ingin unjuk gigi di atas panggung GEN FEST 2026. " .
@@ -116,7 +116,7 @@ class CompetitionSeeder extends Seeder
                 'min_purchase'    => 3,
                 'quota'           => 15,
                 'event_date'      => '2026-09-20',
-                'location'        => 'Batam',
+                'location'        => 'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands',
                 'status'          => 'open',
                 'description'     =>
                     "Lestarikan budaya Indonesia melalui panggung GEN FEST 2026! Lomba Tari Tradisional terbuka untuk pelajar SMA yang ingin menampilkan keindahan tari daerah Nusantara.",
@@ -145,13 +145,13 @@ class CompetitionSeeder extends Seeder
                 'min_purchase'    => 3,
                 'quota'           => 20,
                 'event_date'      => '2026-09-20',
-                'location'        => 'Batam',
+                'location'        => 'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands',
                 'status'          => 'open',
                 'description'     =>
-                    "Unjuk kemampuan musikal terbaikmu di atas panggung GEN FEST 2026! Band Competition terbuka untuk band pelajar SMA se-Kota Batam. " .
+                    "Unjuk kemampuan musikal terbaikmu di atas panggung GEN FEST 2026! Band Competition terbuka untuk band pelajar SMA se-Kota Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands. " .
                     "Tunjukkan kreativitas dan permainan musik terbaikmu.",
                 'requirements'    =>
-                    "- Pelajar aktif SMA/SMK sederajat se-Kota Batam\n" .
+                    "- Pelajar aktif SMA/SMK sederajat se-Kota Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands\n" .
                     "- Usia anggota 16–20 tahun\n" .
                     "- Setiap band terdiri dari minimal 3 orang, maksimal 7 orang\n" .
                     "- Membawa kartu pelajar masing-masing anggota\n" .
@@ -176,7 +176,7 @@ class CompetitionSeeder extends Seeder
                 'min_purchase'    => 1,
                 'quota'           => 60,
                 'event_date'      => '2026-09-20',
-                'location'        => 'Batam',
+                'location'        => 'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands',
                 'status'          => 'open',
                 'description'     =>
                     "Ajang kreatif untuk anak-anak usia 4–9 tahun (TK & SD Kelas 1–3). " .

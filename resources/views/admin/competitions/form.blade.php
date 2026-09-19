@@ -5,9 +5,11 @@
 
 @section('content')
 
+@php($routePrefix = $routePrefix ?? 'admin')
+
 <div class="max-w-2xl">
     <div class="flex items-center gap-3 mb-6">
-        <a href="{{ route('admin.competitions.index') }}" class="p-2 rounded-xl hover:bg-white border border-slate-200 text-slate-500 hover:text-[#2563EB] transition-colors">
+        <a href="{{ route($routePrefix . '.competitions.index') }}" class="p-2 rounded-xl hover:bg-white border border-slate-200 text-slate-500 hover:text-[#2563EB] transition-colors">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
         </a>
         <h1 class="text-xl font-extrabold text-[#0B1040]">
@@ -16,7 +18,7 @@
     </div>
 
     <form
-        action="{{ isset($competition) ? route('admin.competitions.update', $competition->id) : route('admin.competitions.store') }}"
+        action="{{ isset($competition) ? route($routePrefix . '.competitions.update', $competition->id) : route($routePrefix . '.competitions.store') }}"
         method="POST"
         enctype="multipart/form-data"
         class="space-y-5"
@@ -84,7 +86,7 @@
                 </div>
                 <div>
                     <label class="form-label">Lokasi <span class="text-red-500">*</span></label>
-                    <input type="text" name="location" value="{{ old('location', $competition->location ?? '') }}" required class="form-input" placeholder="Batam">
+                    <input type="text" name="location" value="{{ old('location', $competition->location ?? '') }}" required class="form-input" placeholder="Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands">
                 </div>
                 <div>
                     <label class="form-label">Biaya Pendaftaran (Rp) <span class="text-red-500">*</span></label>
@@ -138,7 +140,7 @@
 
         {{-- Actions --}}
         <div class="flex gap-3">
-            <a href="{{ route('admin.competitions.index') }}" class="btn-secondary flex-1 justify-center">Batal</a>
+            <a href="{{ route($routePrefix . '.competitions.index') }}" class="btn-secondary flex-1 justify-center">Batal</a>
             <button type="submit" class="btn-primary flex-1 justify-center">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 {{ isset($competition) ? 'Simpan Perubahan' : 'Tambah Lomba' }}

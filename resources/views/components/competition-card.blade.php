@@ -4,7 +4,7 @@
     'name'        => 'Basket Competition',
     'category'    => 'Olahraga',
     'date'        => '20 September 2026',
-    'location'    => 'Batam',
+    'location'    => 'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands',
     'price'       => 50000,
     'quota'       => 100,
     'registered'  => 45,

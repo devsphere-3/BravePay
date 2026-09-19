@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AdminPaymentController;
 use App\Http\Controllers\Admin\AdminRegistrationController;
 use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminTicketController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\HelpController;
@@ -226,10 +227,14 @@ Route::prefix('superadmin')
     Route::prefix('users')->name('users.')
          ->middleware('permission:superadmin.manage_customers')
          ->group(function () {
-        Route::get('/',        function () { return view('superadmin.users.index'); })->name('index');
-        Route::get('/create',  function () { return view('superadmin.users.create'); })->name('create');
-        Route::get('/{id}',    function () { return view('superadmin.users.show'); })->name('show');
-        Route::get('/{id}/edit', function () { return view('superadmin.users.edit'); })->name('edit');
+        Route::get('/',              [AdminUserController::class, 'index'])->name('index');
+        Route::get('/create',        [AdminUserController::class, 'create'])->name('create');
+        Route::post('/',             [AdminUserController::class, 'store'])->name('store');
+        Route::get('/{id}',          [AdminUserController::class, 'show'])->name('show');
+        Route::get('/{id}/edit',     [AdminUserController::class, 'edit'])->name('edit');
+        Route::put('/{id}',          [AdminUserController::class, 'update'])->name('update');
+        Route::patch('/{id}/status', [AdminUserController::class, 'toggleStatus'])->name('status');
+        Route::delete('/{id}',        [AdminUserController::class, 'destroy'])->name('destroy');
     });
 
     // ── Role & Permission Management ───────────────────────────

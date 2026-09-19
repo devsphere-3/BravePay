@@ -17,12 +17,15 @@ class AdminCompetitionController extends Controller
             'registrations as paid_registrations_count' => fn ($q) => $q->where('status', 'paid'),
         ])->orderByDesc('created_at')->get();
 
-        return view('admin.competitions.index', compact('competitions'));
+        return view('admin.competitions.index', [
+            'competitions' => $competitions,
+            'routePrefix' => $this->routePrefix(),
+        ]);
     }
 
     public function create(): View
     {
-        return view('admin.competitions.form');
+        return view('admin.competitions.form', ['routePrefix' => $this->routePrefix()]);
     }
 
     public function store(Request $request)
@@ -59,14 +62,17 @@ class AdminCompetitionController extends Controller
 
         Competition::create($validated);
 
-        return redirect()->route('admin.competitions.index')
+        return redirect()->route($this->routePrefix() . '.competitions.index')
             ->with('success', 'Lomba "' . $validated['name'] . '" berhasil ditambahkan.');
     }
 
     public function edit(int $id): View
     {
         $competition = Competition::findOrFail($id);
-        return view('admin.competitions.form', compact('competition'));
+        return view('admin.competitions.form', [
+            'competition' => $competition,
+            'routePrefix' => $this->routePrefix(),
+        ]);
     }
 
     public function update(Request $request, int $id)
@@ -103,7 +109,7 @@ class AdminCompetitionController extends Controller
 
         $competition->update($validated);
 
-        return redirect()->route('admin.competitions.index')
+        return redirect()->route($this->routePrefix() . '.competitions.index')
             ->with('success', 'Lomba "' . $competition->name . '" berhasil diperbarui.');
     }
 
@@ -113,7 +119,12 @@ class AdminCompetitionController extends Controller
         $name = $competition->name;
         $competition->delete();
 
-        return redirect()->route('admin.competitions.index')
+        return redirect()->route($this->routePrefix() . '.competitions.index')
             ->with('success', 'Lomba "' . $name . '" berhasil dihapus.');
+    }
+
+    private function routePrefix(): string
+    {
+        return request()->routeIs('superadmin.*') ? 'superadmin' : 'admin';
     }
 }

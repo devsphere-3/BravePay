@@ -28,6 +28,11 @@ class CheckPermission
         $user = Auth::user();
         $user->loadMissing('role');
 
+        // Superadmin memiliki akses penuh sesuai bypass Gate di AppServiceProvider.
+        if ($user->isSuperAdmin()) {
+            return $next($request);
+        }
+
         // Cek status aktif
         if (! $user->isActive()) {
             Auth::logout();

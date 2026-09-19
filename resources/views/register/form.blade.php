@@ -8,7 +8,7 @@
 $comp = $competition ?? (object)[
     'id'   => 1, 'slug' => 'basket-competition',
     'name' => 'Basket Competition', 'event_name' => 'GEN FEST 2026',
-    'price'=> 50000, 'location' => 'Batam',
+    'price'=> 50000, 'location' => 'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands',
     'event_date' => '2026-09-20', 'category' => 'Olahraga',
     'unit' => 'peserta', 'min_purchase' => 1,
 ];

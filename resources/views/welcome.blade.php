@@ -145,7 +145,7 @@
                                 </div>
                                 <div class="flex-1">
                                     <p class="text-xs text-[#94A3B8] font-medium mb-1">LOKASI</p>
-                                    <p class="text-[#0B1040] font-semibold text-sm">Batam</p>
+                                    <p class="text-[#0B1040] font-semibold text-sm">Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands</p>
                                 </div>
                             </div>
                             {{-- QR placeholder --}}
@@ -243,8 +243,8 @@
             @empty
                 {{-- Demo cards when no DB data --}}
                 @foreach([
-                    ['name'=>'Basket Competition','cat'=>'Olahraga','date'=>'20 Sep 2026','loc'=>'Batam','price'=>50000,'status'=>'open','event'=>'GEN FEST 2026'],
-                    ['name'=>'Futsal Championship','cat'=>'Olahraga','date'=>'5 Okt 2026','loc'=>'Batam','price'=>75000,'status'=>'open','event'=>'YOUTH SPORT FEST'],
+                    ['name'=>'Basket Competition','cat'=>'Olahraga','date'=>'20 Sep 2026','loc'=>'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands','price'=>50000,'status'=>'open','event'=>'GEN FEST 2026'],
+                    ['name'=>'Futsal Championship','cat'=>'Olahraga','date'=>'5 Okt 2026','loc'=>'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands','price'=>75000,'status'=>'open','event'=>'YOUTH SPORT FEST'],
                     ['name'=>'Desain Grafis','cat'=>'Kreatif','date'=>'12 Okt 2026','loc'=>'Online','price'=>35000,'status'=>'coming_soon','event'=>'CREATIVE FEST 2026'],
                 ] as $i => $demo)
                 <div class="fade-up" style="transition-delay: {{ $i * 0.1 }}s">

@@ -23,7 +23,7 @@ class AdminRegistrationDeletionTest extends TestCase
             'category' => 'Olahraga',
             'price' => 50000,
             'event_date' => '2026-10-01',
-            'location' => 'Batam',
+            'location' => 'Harbour Bay, Jodoh River, Batu Ampar, Batam City, Riau Islands',
             'status' => 'open',
             'unit' => 'peserta',
         ]);
